@@ -1,0 +1,13 @@
+.env
+.env.*
+*.key
+*.pem
+*.pcap
+*.pcapng
+*.evtx
+*.dmp
+*.raw
+*.img
+*.qcow2
+/restricted/
+/local-results/
