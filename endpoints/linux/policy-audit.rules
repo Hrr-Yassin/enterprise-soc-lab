@@ -1,0 +1,2 @@
+-w /var/lib/soc-lab/policy/service.conf -p wa -k soc_policy_change
+-w /var/lib/soc-lab/policy/control.conf -p wa -k soc_policy_control

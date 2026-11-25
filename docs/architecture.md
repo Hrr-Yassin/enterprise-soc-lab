@@ -1,33 +1,41 @@
 # Architecture
 
-**Proposed topology**
+The lab uses rootless Podman for Wazuh and a separate QEMU/KVM guest for monitored activity. Both are named and scoped to this repository. The Linux guest is an independent cloud disk overlay. This layout uses no libvirt bridge, storage pool, or existing VM.
 
-Run two KVM networks: an endpoint segment for Windows and Linux, and a restricted management segment for the Wazuh manager/indexer/dashboard and analyst workstation. Mirror the endpoint segment to Suricata through a receive-only capture path. Agents and the sensor can reach only the collector ingress. Restrict the dashboard and indexer to management access. Use private time synchronization and an explicitly bounded update window. Document that intra-host traffic invisible to the mirror is an expected coverage gap.
-
-![Proposed component boundaries and directed data relationships](../assets/architecture.svg)
-
-```mermaid
+~~~mermaid
 flowchart LR
-    N0["Windows and Linux"]
-    N1["Suricata sensor"]
-    N2["Wazuh manager"]
-    N3["Indexer / dashboard"]
-    N4["Analyst case"]
-    N0 -->|"agent telemetry"| N2
-    N1 -->|"EVE JSON"| N2
-    N2 -->|"normalized events"| N3
-    N3 -->|"alerts and provenance"| N4
-```
+  Analyst["Analyst browser<br/>127.0.0.1:8443"]
+  subgraph Central["Rootless Podman internal network"]
+    Dashboard["Wazuh Dashboard"]
+    Manager["Wazuh Manager and Filebeat"]
+    Index["Wazuh Indexer"]
+    Archive["Private manager archive"]
+    Dashboard -->|"HTTPS"| Index
+    Dashboard -->|"Wazuh HTTPS API"| Manager
+    Manager -->|"Filebeat with certificate validation"| Index
+    Manager --> Archive
+  end
+  subgraph Guest["Dedicated soc-linux QEMU guest"]
+    Audit["Auditd and system logs"]
+    FIM["FIM and test application"]
+    Sensor["Suricata on guest loopback"]
+    Agent["Wazuh agent"]
+    Audit --> Agent
+    FIM --> Agent
+    Sensor -->|"EVE JSON"| Agent
+  end
+  Analyst -->|"HTTPS using project CA"| Dashboard
+  Agent -->|"Authenticated AES channel via loopback relay"| Manager
+~~~
 
-| Source | Destination | Interface or record |
-| --- | --- | --- |
-| Windows and Linux | Wazuh manager | agent telemetry |
-| Suricata sensor | Wazuh manager | EVE JSON |
-| Wazuh manager | Indexer / dashboard | normalized events |
-| Indexer / dashboard | Analyst case | alerts and provenance |
+| Host listener | Purpose |
+| --- | --- |
+| 127.0.0.1:8443/TCP | Dashboard HTTPS |
+| 127.0.0.1:15140/TCP | Wazuh agent data relay |
+| 127.0.0.1:22223/TCP | Key-only SSH to the dedicated Linux guest |
 
-## Decision and limitation
+The indexer and manager API are reachable only inside the project network. Enrollment uses a per-agent key created through the manager's authenticated private API and installed over the guest's pinned, key-only SSH connection. During package setup, QEMU forwards the guest update connection to a private Unix socket. The relay allows HTTPS CONNECT to Debian and Wazuh package repositories and ends when provisioning exits. The normal guest launch forwards agent data and listens on the loopback SSH port.
 
-A single Wazuh node keeps the lab affordable and creates a known single point of failure; measure backlog recovery before considering a separate indexer. Suricata gives protocol and signature context while endpoint events carry identity and process provenance. Keep Sigma translation reviewable and write native correlation only where the translation loses intent.
+Suricata observes the exercise's traffic on the Linux guest's loopback interface. Its alerts document what that sensor could see. A separate routing or mirroring design would be necessary for traffic between real endpoints. The collector and indexer run on one host, so a crash or disk loss there affects the whole lab.
 
-See [security boundaries](threat-model.md) and [deployment assumptions](lab-requirements.md).
+See the [deployment procedure](deployment.md), [decision record](adr-001-deployment.md), and [threat model](threat-model.md).

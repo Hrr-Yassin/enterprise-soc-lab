@@ -1,0 +1,241 @@
+{
+  "run": "9007ca4b",
+  "scope": "Authorized synthetic and live benign events in the dedicated SOC guest",
+  "control_window_started_at": "2026-11-25T18:08:07.758666+00:00",
+  "positive_window_started_at": "2026-11-25T18:08:34.021344+00:00",
+  "index_checked_at": "2026-11-25T18:08:42.489921+00:00",
+  "endpoint_clock_offset_seconds": 0.07,
+  "latency_method": "Manager alert timestamp minus guest action start, adjusted by guest-minus-collector clock offset",
+  "agent": "soc-linux",
+  "agent_version": "Wazuh v4.14.10",
+  "scenario_count": 10,
+  "passed_scenarios": 10,
+  "false_target_alerts": 0,
+  "positives_with_indexed_alert": 10,
+  "p95_source_to_manager_seconds": 2.997,
+  "private_archive_sha256": "637c6271b2d8990086629572cd65ef82eb60cee687b5cadcb4a32bee270895ce",
+  "scenarios": [
+    {
+      "scenario": "D01",
+      "telemetry": "fixture: OpenSSH",
+      "rule": "5763",
+      "pass": true,
+      "control_records_at_manager": 7,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.311,
+      "alerts": [
+        {
+          "record_id": "1795630115.794605",
+          "indexed_document_id": "Vz3lE6IBlfn5GjgEMWu-",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.810+0000",
+          "level": 10,
+          "description": "sshd: brute force trying to get access to the system. Authentication failed."
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D02",
+      "telemetry": "fixture: Windows Security 4732",
+      "rule": "100102",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.318,
+      "alerts": [
+        {
+          "record_id": "1795630115.795941",
+          "indexed_document_id": "WD3lE6IBlfn5GjgEMWu-",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.819+0000",
+          "level": 11,
+          "description": "SOC lab fixture: A member was added to local Administrators"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D03",
+      "telemetry": "live: Linux sudo",
+      "rule": "100103",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.441,
+      "alerts": [
+        {
+          "record_id": "1795630115.798930",
+          "indexed_document_id": "Wz3lE6IBlfn5GjgENWsS",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.943+0000",
+          "level": 8,
+          "description": "SOC lab: Auditd recorded a failed sudo command authorization"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D04",
+      "telemetry": "live: Wazuh FIM",
+      "rule": "100104",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 0.924,
+      "alerts": [
+        {
+          "record_id": "1795630115.787152",
+          "indexed_document_id": "ST3lE6IBlfn5GjgEMWu9",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.453+0000",
+          "level": 9,
+          "description": "SOC lab: Monitored inventory file changed"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D05",
+      "telemetry": "live: Linux systemd",
+      "rule": "100105",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.213,
+      "alerts": [
+        {
+          "record_id": "1795630115.790267",
+          "indexed_document_id": "Tj3lE6IBlfn5GjgEMWu9",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.744+0000",
+          "level": 8,
+          "description": "SOC lab: A transient systemd service started outside the lab job policy"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D06",
+      "telemetry": "fixture: Sysmon 1",
+      "rule": "100106",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.194,
+      "alerts": [
+        {
+          "record_id": "1795630115.797076",
+          "indexed_document_id": "WT3lE6IBlfn5GjgEMWu-",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.825+0000",
+          "level": 8,
+          "description": "SOC lab fixture: A Windows process started from the Public profile"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D07",
+      "telemetry": "live: Suricata DNS",
+      "rule": "100107",
+      "pass": true,
+      "control_records_at_manager": 2,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 2.966,
+      "alerts": [
+        {
+          "record_id": "1795630117.802001",
+          "indexed_document_id": "Xj3lE6IBlfn5GjgEOWsE",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:37.598+0000",
+          "level": 7,
+          "description": "SOC lab: DNS query matched the disallowed lab namespace"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D08",
+      "telemetry": "live: Suricata UDP",
+      "rule": "100108",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 2.997,
+      "alerts": [
+        {
+          "record_id": "1795630117.803792",
+          "indexed_document_id": "Xz3lE6IBlfn5GjgEOWsE",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:37.629+0000",
+          "level": 8,
+          "description": "SOC lab: Sensor observed traffic to a restricted UDP port"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D09",
+      "telemetry": "live: Linux Auditd",
+      "rule": "100109",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.345,
+      "alerts": [
+        {
+          "record_id": "1795630115.799593",
+          "indexed_document_id": "XD3lE6IBlfn5GjgENWsS",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.977+0000",
+          "level": 9,
+          "description": "SOC lab: An audit watch recorded a successful change to the service policy"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    },
+    {
+      "scenario": "D10",
+      "telemetry": "live: lab HTTP application",
+      "rule": "100100",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.194,
+      "alerts": [
+        {
+          "record_id": "1795630115.798302",
+          "indexed_document_id": "Wj3lE6IBlfn5GjgEMWu-",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T18:08:35.830+0000",
+          "level": 8,
+          "description": "SOC lab: Inventory export denied for a service identity"
+        }
+      ],
+      "unattributed_target_alerts": 0,
+      "control_index_settled": true,
+      "control_targets_at_manager": 0
+    }
+  ],
+  "index_query_started_at": "2026-11-25T18:08:41.497341+00:00",
+  "unattributed_target_alerts": 0
+}

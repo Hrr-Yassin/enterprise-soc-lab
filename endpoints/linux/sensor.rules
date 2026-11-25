@@ -1,0 +1,3 @@
+alert dns 127.0.0.1 any -> 127.0.0.1 15353 (msg:"SOC Lab DNS namespace outside inventory allowlist"; flow:to_server; dns.query; content:".unapproved.soc.test"; endswith; nocase; sid:9900101; rev:1;)
+alert udp 127.0.0.1 any -> 127.0.0.1 15941 (msg:"SOC Lab traffic crossed dedicated UDP policy boundary"; sid:9900102; rev:1;)
+alert udp 127.0.0.1 any -> 127.0.0.1 15940 (msg:"SOC Lab UDP allowlist control"; content:"SOC UDP policy probe "; startswith; sid:9900100; rev:1;)

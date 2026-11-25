@@ -1,0 +1,5 @@
+[
+  {"id":"SOC-01","title":"Identity escalation signals","status":"Simulated investigation complete"},
+  {"id":"SOC-02","title":"Monitored file and service changes","status":"Simulated investigation complete"},
+  {"id":"SOC-03","title":"Network policy and denied application export","status":"Simulated investigation complete"}
+]

@@ -1,0 +1,181 @@
+{
+  "run": "0cee9232",
+  "scope": "Authorized synthetic and live benign events in the dedicated SOC guest",
+  "control_window_started_at": "2026-11-25T17:21:14.778526+00:00",
+  "positive_window_started_at": "2026-11-25T17:21:40.299277+00:00",
+  "index_checked_at": "2026-11-25T17:22:43.134148+00:00",
+  "endpoint_clock_offset_seconds": -0.579,
+  "agent": "soc-linux",
+  "agent_version": "Wazuh v4.14.10",
+  "scenario_count": 10,
+  "passed_scenarios": 7,
+  "false_target_alerts": 0,
+  "positives_with_indexed_alert": 7,
+  "p95_source_to_manager_seconds": 2.959,
+  "private_archive_sha256": "d4694c2964ff8ecca8d91ff4adc32d06a36b1a445d8697ee88354d6222038f6b",
+  "scenarios": [
+    {
+      "scenario": "D01",
+      "telemetry": "fixture: OpenSSH",
+      "rule": "5763",
+      "pass": true,
+      "control_records_at_manager": 7,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.222,
+      "alerts": [
+        {
+          "record_id": "1795627301.750734",
+          "indexed_document_id": "_T26E6IBlfn5GjgETWoA",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:41.187+0000",
+          "level": 10,
+          "description": "sshd: brute force trying to get access to the system. Authentication failed."
+        }
+      ]
+    },
+    {
+      "scenario": "D02",
+      "telemetry": "fixture: Windows Security 4732",
+      "rule": "100102",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.225,
+      "alerts": [
+        {
+          "record_id": "1795627301.752070",
+          "indexed_document_id": "_j26E6IBlfn5GjgETWoA",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:41.192+0000",
+          "level": 11,
+          "description": "SOC lab fixture: A member was added to local Administrators"
+        }
+      ]
+    },
+    {
+      "scenario": "D03",
+      "telemetry": "live: Linux sudo",
+      "rule": "100103",
+      "pass": false,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": null,
+      "alerts": []
+    },
+    {
+      "scenario": "D04",
+      "telemetry": "live: Wazuh FIM",
+      "rule": "100104",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 0.84,
+      "alerts": [
+        {
+          "record_id": "1795627300.743220",
+          "indexed_document_id": "7z26E6IBlfn5GjgETGr_",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:40.826+0000",
+          "level": 9,
+          "description": "SOC lab: Monitored inventory file changed"
+        }
+      ]
+    },
+    {
+      "scenario": "D05",
+      "telemetry": "live: Linux systemd",
+      "rule": "100105",
+      "pass": false,
+      "control_records_at_manager": 2,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": null,
+      "alerts": []
+    },
+    {
+      "scenario": "D06",
+      "telemetry": "fixture: Sysmon 1",
+      "rule": "100106",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.158,
+      "alerts": [
+        {
+          "record_id": "1795627301.753205",
+          "indexed_document_id": "_z26E6IBlfn5GjgETWoA",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:41.197+0000",
+          "level": 8,
+          "description": "SOC lab fixture: A Windows process started from the Public profile"
+        }
+      ]
+    },
+    {
+      "scenario": "D07",
+      "telemetry": "live: Suricata DNS",
+      "rule": "100107",
+      "pass": true,
+      "control_records_at_manager": 2,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 2.949,
+      "alerts": [
+        {
+          "record_id": "1795627302.755059",
+          "indexed_document_id": "AT26E6IBlfn5GjgETWsA",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:42.988+0000",
+          "level": 7,
+          "description": "SOC lab: DNS query matched the disallowed lab namespace"
+        }
+      ]
+    },
+    {
+      "scenario": "D08",
+      "telemetry": "live: Suricata UDP",
+      "rule": "100108",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 2.959,
+      "alerts": [
+        {
+          "record_id": "1795627302.756852",
+          "indexed_document_id": "Aj26E6IBlfn5GjgETWsA",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:42.998+0000",
+          "level": 8,
+          "description": "SOC lab: Sensor observed traffic to a restricted UDP port"
+        }
+      ]
+    },
+    {
+      "scenario": "D09",
+      "telemetry": "live: Linux Auditd",
+      "rule": "100109",
+      "pass": false,
+      "control_records_at_manager": 0,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": null,
+      "alerts": []
+    },
+    {
+      "scenario": "D10",
+      "telemetry": "live: lab HTTP application",
+      "rule": "100100",
+      "pass": true,
+      "control_records_at_manager": 1,
+      "control_target_alerts": 0,
+      "source_to_manager_seconds": 1.162,
+      "alerts": [
+        {
+          "record_id": "1795627301.754431",
+          "indexed_document_id": "AD26E6IBlfn5GjgETWsA",
+          "index": "wazuh-alerts-4.x-2026.11.25",
+          "received_at": "2026-11-25T17:21:41.202+0000",
+          "level": 8,
+          "description": "SOC lab: Inventory export denied for a service identity"
+        }
+      ]
+    }
+  ]
+}
