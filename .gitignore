@@ -11,3 +11,6 @@
 *.qcow2
 /restricted/
 /local-results/
+
+/.venv/
+__pycache__/

@@ -1,0 +1,78 @@
+{
+  "run": "9007ca4b",
+  "engine": "Wazuh 4.14.10 Logtest",
+  "fixtures": [
+    {
+      "scenario": "D03",
+      "phase": "positive",
+      "origin": "manager archive",
+      "expected_decoder": "auditd",
+      "target_rule": "100103",
+      "fixture_sha256": "fca3a5666a760be6d8d068969e4ea9aab4ca8fc42e0d23a998e309eaf87a265c",
+      "observed_decoder": "auditd",
+      "observed_rule": "100103",
+      "alert": true,
+      "passed": true
+    },
+    {
+      "scenario": "D03",
+      "phase": "control",
+      "origin": "manager archive",
+      "expected_decoder": "auditd",
+      "target_rule": "100103",
+      "fixture_sha256": "3946e3e97860ec76d3cdb7262bcbb88ef522af3ab3fe3176c77c22f0ca196259",
+      "observed_decoder": "auditd",
+      "observed_rule": "80700",
+      "alert": false,
+      "passed": true
+    },
+    {
+      "scenario": "D05",
+      "phase": "positive",
+      "origin": "manager archive",
+      "expected_decoder": "systemd",
+      "target_rule": "100105",
+      "fixture_sha256": "90259295514423a12a3b4222fb1df2d9f4d029d03f664bf59c7c0bb0ed4feab9",
+      "observed_decoder": "systemd",
+      "observed_rule": "100105",
+      "alert": true,
+      "passed": true
+    },
+    {
+      "scenario": "D05",
+      "phase": "control",
+      "origin": "manager archive",
+      "expected_decoder": "systemd",
+      "target_rule": "100105",
+      "fixture_sha256": "c35d0b68af3e90d74fb9e9da9edc4598cccfaaea0053986eac1ba062d832788f",
+      "observed_decoder": "systemd",
+      "observed_rule": "40700",
+      "alert": false,
+      "passed": true
+    },
+    {
+      "scenario": "D09",
+      "phase": "positive",
+      "origin": "manager archive",
+      "expected_decoder": "auditd",
+      "target_rule": "100109",
+      "fixture_sha256": "e7eed9787973e12c07040281da350fd9c1e28660b16c8f37ac2431599ccd07b5",
+      "observed_decoder": "auditd",
+      "observed_rule": "100109",
+      "alert": true,
+      "passed": true
+    },
+    {
+      "scenario": "D09",
+      "phase": "control",
+      "origin": "manager archive",
+      "expected_decoder": "auditd",
+      "target_rule": "100109",
+      "fixture_sha256": "e08901ba0379addc2f3bef8c6f1e048851e674cf9a27898f49e1c80f065313a6",
+      "observed_decoder": "auditd",
+      "observed_rule": "92600",
+      "alert": false,
+      "passed": true
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Technical design
 
-**Phase 0 specification**
+This Phase 0 design records the original proposal. See the [current detection catalogue](detection-coverage.md) and [deployment guide](deployment.md) for the implemented lab.
 
 Sign off a field mapping before rule deployment. Keep event time, receive time, source host, source record ID, user, event class and a raw-record pointer. Deduplicate on source identity and record ID, with a bounded time window if IDs reset. Quarantine unsupported schemas. Keep raw events restricted and project redacted fields for routine triage. Correlate host/account/time across sources with a late-event tolerance of two minutes. Separate alert severity from case priority by evaluating confidence, scope and asset criticality. For every case, preserve an evidence timeline, competing explanations, disposition, owner and escalation reason. Use dashboards for ingestion health, rule noise, and open cases. Respond with tabletop containment and recovery approvals; never automatically isolate a host.
 

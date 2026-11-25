@@ -1,70 +1,74 @@
-![Enterprise SOC & Detection Engineering Lab — Design Phase — Educational Project](assets/banner.svg)
-
 # Enterprise SOC & Detection Engineering Lab
 
-**Design Phase — Educational Project**
+A single-host SOC lab for tracing Linux and network telemetry from collection to an indexed Wazuh alert, then using the evidence in an incident investigation. It runs on Fedora with rootless Podman and KVM.
 
-Design a small SOC that traces an endpoint or network event through collection, detection, analyst triage and a defensible incident decision.
+## Verified results
 
-## Why this project
+| Check | Result |
+| --- | --- |
+| End-to-end detection | **10/10** in run `9007ca4b`. Ten indexed positives, 17 manager records across ten negative controls, zero control target matches, and zero unattributed target matches. |
+| Native Wazuh Logtest | **6/6** archived inputs. D03, D05 and D09 each had a positive and a control. |
+| Local automated validation | **25 tests passed** plus static rule, endpoint, image digest and script checks. |
+| Incident response | **Three simulated investigations** with findings, timelines, containment decisions and evidence references in Markdown and PDF. |
 
-A dashboard can show activity while silently losing fields or duplicating events. The lab makes event coverage, false positives and the quality of analyst decisions measurable.
+Seven scenarios generated live telemetry on the Debian guest. Three used labeled log fixtures: SSH correlation, Windows Security 4732 and Sysmon ProcessCreate. Wazuh decoded and indexed the Windows-shaped fixtures from Linux. Native Windows and Sysmon collection is a future milestone for a dedicated authorized guest.
 
-- Trace Windows, Linux and network signals from raw evidence to a case.
-- Explain when a single event warrants triage and when corroboration changes priority.
-- Quantify coverage, detection latency and false alerts against a labeled replay.
+[Accepted run](docs/evidence/run-9007ca4b.json) · [Native replay](docs/evidence/logtest-9007ca4b.json) · [Baseline run](docs/evidence/run-0cee9232.json) · [Detection coverage matrix](docs/detection-coverage.md)
 
-## Proposed system
+## Architecture
 
-```mermaid
-flowchart LR
-    N0["Windows and Linux"]
-    N1["Suricata sensor"]
-    N2["Wazuh manager"]
-    N3["Indexer / dashboard"]
-    N4["Analyst case"]
-    N0 -->|"agent telemetry"| N2
-    N1 -->|"EVE JSON"| N2
-    N2 -->|"normalized events"| N3
-    N3 -->|"alerts and provenance"| N4
-```
+| Component | Role |
+| --- | --- |
+| Wazuh 4.14.10 | Manager and Filebeat for detection and delivery, one indexer, and HTTPS dashboard |
+| Dedicated Debian guest | Wazuh agent, file integrity monitoring, Auditd, rsyslog, and a small test application |
+| Suricata | Passive EVE JSON collection on the guest's loopback network |
+| Windows and Sysmon | EventChannel-shaped detection fixtures and a dedicated-guest onboarding guide |
 
-Run two KVM networks: an endpoint segment for Windows and Linux, and a restricted management segment for the Wazuh manager/indexer/dashboard and analyst workstation. Mirror the endpoint segment to Suricata through a receive-only capture path. Agents and the sensor can reach only the collector ingress. Restrict the dashboard and indexer to management access. Use private time synchronization and an explicitly bounded update window. Document that intra-host traffic invisible to the mirror is an expected coverage gap.
+The dashboard listens on `https://127.0.0.1:8443`. The indexer and manager API stay on an internal Podman network. The Debian guest sends authenticated agent traffic through a loopback-only relay. Suricata captures the exercise traffic on the guest loopback interface.
 
-**Design trade-off.** A single Wazuh node keeps the lab affordable and creates a known single point of failure; measure backlog recovery before considering a separate indexer. Suricata gives protocol and signature context while endpoint events carry identity and process provenance. Keep Sigma translation reviewable and write native correlation only where the translation loses intent.
+![Fedora SOC lab topology showing the Debian guest, Podman services and loopback listeners](assets/architecture.svg)
 
-## Engineering stack
+The central services share a single host and indexer. This lab validates detection behavior for the observed exercise traffic. Wider sensor placement, operator access controls, telemetry loss monitoring and capacity tests are future work. [Architecture and data flow](docs/architecture.md) · [Deployment decision](docs/adr-001-deployment.md) · [Security limitations](SECURITY.md)
 
-Wazuh integrates agent enrollment, a manager, indexer and dashboard for a compact SOC. Suricata contributes EVE JSON network metadata. Sysmon and Windows Security channels capture complementary process and identity events; Linux Auditd supplies syscall-derived records. Sigma expresses detection intent portable across backends, but mappings and rule semantics must be tested in Wazuh. Wireshark is reserved for manual packet review and Python for fixture normalization and metrics. KVM/QEMU provides isolated, reproducible endpoints.
+During the accepted run, seven samples showed the indexer using 1.095–1.098 GB RAM, the manager using 36.95–55.03% CPU, and the guest using 369.7–370.3 MiB resident memory. The guest overlay occupied 484 MiB. [Measurement method and per-service results](docs/resources.md)
 
-## Trust and technical challenges
+## Reproduce locally
 
-- **Collector spoofing** across endpoint to manager. Allowlisted agent enrollment, per-source identity, restricted ingress.
-- **Log loss or clock drift** across sensor and indexer. Time health, sequence gaps, queue alarms.
-- **Analyst exposure** across index to dashboard. Scoped read role, redacted fields, retention controls.
-- **Alert floods** across rules to case queue. Deduplication and noise thresholds.
+For a new installation, follow the deployment guide for Fedora dependencies, private credentials and PKI, and Linux guest enrollment. In the project root, run the same static and unit checks as CI. [Deployment guide](docs/deployment.md) · [Troubleshooting](docs/troubleshooting.md)
 
-## Lab and acceptance
+~~~sh
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python3 -B scripts/validate.py
+python3 -B -m unittest discover -s tests -v
+~~~
 
-Starting estimate: 8 logical cores, 24 GB RAM and 160 GB SSD. Budget 8 GB for central Wazuh, 6 GB for Windows, 2 GB each for Linux and sensor, with remaining headroom for host and analyst. Set ingestion quotas and a seven-day fixture retention ceiling. Acquire legitimate OS images, KVM snapshots and a private virtual switch.
+Once the stack and Linux endpoint are provisioned, require an active endpoint and run the detection exercise.
 
-Use five controlled scenarios built from labeled benign activity and fixture logs: S1 approved support-account sign-in sequence, S2 monitored service/job change, S3 synthetic DNS and connection burst, S4 test policy-file change, and S5 simulated telemetry interruption. Record negative controls from normal admin/backup operations. Future target: at least 95% event coverage (indexed expected records / emitted expected records), p95 event-to-alert latency ≤60 seconds at a documented ingest rate, and ≤2% false-positive test windows (alerted benign windows / all benign windows). Score each investigation 0–2 for timeline, provenance, competing explanation, scope and response rationale. Target ≥8/10 per scenario. Record clock skew and report sample counts and dropped data alongside metrics.
+~~~sh
+./scripts/soc.sh health --wait 120 --require-agent soc-linux &&
+python3 -B scripts/run_scenarios.py
+~~~
 
-## Delivery and professional skills
+The runner saves indexed alert references and control receipt evidence under the ignored `local-results/` directory. Keep raw archives, credentials, keys and guest disks private.
 
-Network diagram, source onboarding checklist, normalization map, ten reviewed detection specifications, five replay manifests, triage dashboard, incident playbooks and a detection quality report.
+## Dashboard and investigations
 
-Telemetry engineering, network monitoring, detection tuning, incident triage, threat hunting and response documentation.
+The Operations dashboard shows the accepted run's volume, alert severity, file integrity, authentication and Suricata results alongside the coverage and case summaries.
 
-Phase 0 design is documented. The [roadmap](ROADMAP.md) tracks four future stages, from a minimal prototype through validation and evidence publication.
+![Operations dashboard showing ten verified scenarios, alert severity, authentication, file integrity and Suricata results](docs/evidence/screenshots/operations-9007ca4b.png)
 
-## Scope and ethics
+The live Agents page showed `soc-linux` active on Debian 12. The screenshot masks the agent IP address. [Agents capture](docs/evidence/screenshots/agents-9007ca4b.png)
 
-Collect telemetry from enrolled training machines only. Keep raw captures and account identifiers in the lab and publish aggregate, approved measurements.
+| Investigation | Evidence |
+| --- | --- |
+| SOC-01 · Identity escalation signals | [Report](docs/incidents/01-identity.md) · [PDF](docs/incidents/01-identity.pdf) |
+| SOC-02 · File and service changes | [Report](docs/incidents/02-integrity.md) · [PDF](docs/incidents/02-integrity.pdf) |
+| SOC-03 · Network policy and denied export | [Report](docs/incidents/03-network-policy.md) · [PDF](docs/incidents/03-network-policy.pdf) |
 
-## Design references and navigation
+## Demonstration and interview
 
-- [Architecture](docs/architecture.md) · [Technical design](docs/technical-design.md) · [Threat model](docs/threat-model.md)
-- [Learning objectives](docs/learning-objectives.md) · [Testing strategy](docs/testing-strategy.md) · [Lab requirements](docs/lab-requirements.md)
-- [Official references](docs/references.md) · [Evidence template](templates/detection-review.md) · [Security](SECURITY.md)
-- [Back to the portfolio](https://github.com/Hrr-Yassin)
+[Five-minute demo](docs/demo.md) · [20 interview questions and answers](docs/interview.md) · [CV and LinkedIn copy](docs/portfolio.md) · [Resource measurements](docs/resources.md)
+
+[Windows and Sysmon future milestone](endpoints/windows/README.md) · [Roadmap](ROADMAP.md) · [Engineering progress](PROGRESS.md) · [Handoff](HANDOFF.md)

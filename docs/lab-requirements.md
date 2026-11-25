@@ -1,5 +1,7 @@
 # Laboratory requirements
 
+This Phase 0 design records the original proposal. See the [deployment guide](deployment.md) and [resource report](resources.md) for the implemented lab.
+
 Starting estimate: 8 logical cores, 24 GB RAM and 160 GB SSD. Budget 8 GB for central Wazuh, 6 GB for Windows, 2 GB each for Linux and sensor, with remaining headroom for host and analyst. Set ingestion quotas and a seven-day fixture retention ceiling. Acquire legitimate OS images, KVM snapshots and a private virtual switch.
 
 ## Setup decisions before implementation

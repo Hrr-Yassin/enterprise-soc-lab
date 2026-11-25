@@ -1,0 +1,95 @@
+<group name="soc_lab,">
+  <rule id="100102" level="11">
+    <decoded_as>json</decoded_as>
+    <field name="soc_fixture">^windows-eventchannel-v1$</field>
+    <field name="win.system.channel">^Security$</field>
+    <field name="win.system.eventID">^4732$</field>
+    <field name="win.eventdata.targetSid">^S-1-5-32-544$</field>
+    <description>SOC lab fixture: A member was added to local Administrators</description>
+    <mitre><id>T1098.007</id></mitre>
+    <group>group_changed,soc_identity,soc_fixture,</group>
+  </rule>
+  <rule id="100122" level="11">
+    <if_sid>60154</if_sid>
+    <field name="win.system.eventID">^4732$</field>
+    <description>SOC lab: A member was added to local Administrators</description>
+    <mitre><id>T1098.007</id></mitre>
+    <group>group_changed,soc_identity,</group>
+  </rule>
+
+  <rule id="100103" level="8">
+    <if_sid>80700</if_sid>
+    <field name="audit.type" type="pcre2">^USER_CMD$</field>
+    <field name="audit.exe" type="pcre2">^"/usr/bin/sudo"$</field>
+    <field name="audit.res" type="pcre2">^failed$</field>
+    <description>SOC lab: Auditd recorded a failed sudo command authorization</description>
+    <mitre><id>T1548.003</id></mitre>
+    <group>authentication_failed,soc_identity,</group>
+  </rule>
+
+  <rule id="100104" level="9">
+    <if_sid>550</if_sid>
+    <field name="file" type="pcre2">^/var/lib/soc-lab/files/inventory\.txt$</field>
+    <description>SOC lab: Monitored inventory file changed</description>
+    <group>syscheck,syscheck_entry_modified,soc_integrity,</group>
+  </rule>
+
+  <rule id="100105" level="8">
+    <if_sid>40700</if_sid>
+    <match type="pcre2">^Started (?:soc-lab-([a-z0-9-]+)\.service - )?SOC lab job (?!inventory-)(?(1)\1|[a-z0-9-]+)\.?$</match>
+    <description>SOC lab: A transient systemd service started outside the lab job policy</description>
+    <mitre><id>T1543.002</id></mitre>
+    <group>systemd,soc_integrity,</group>
+  </rule>
+
+  <rule id="100106" level="8">
+    <decoded_as>json</decoded_as>
+    <field name="soc_fixture">^windows-eventchannel-v1$</field>
+    <field name="win.system.channel">^Microsoft-Windows-Sysmon/Operational$</field>
+    <field name="win.system.eventID">^1$</field>
+    <field name="win.eventdata.image" type="pcre2">(?i)^[a-z]:\\Users\\Public\\[^\\]+\.exe$</field>
+    <description>SOC lab fixture: A Windows process started from the Public profile</description>
+    <group>sysmon_event1,soc_integrity,soc_fixture,</group>
+  </rule>
+  <rule id="100126" level="8">
+    <if_sid>61603</if_sid>
+    <field name="win.eventdata.image" type="pcre2">(?i)^[a-z]:\\Users\\Public\\[^\\]+\.exe$</field>
+    <description>SOC lab: A Windows process started from the Public profile</description>
+    <group>sysmon_event1,soc_integrity,</group>
+  </rule>
+
+  <rule id="100107" level="7">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature_id">^9900101$</field>
+    <description>SOC lab: DNS query matched the disallowed lab namespace</description>
+    <group>suricata,soc_network,soc_dns,</group>
+  </rule>
+
+  <rule id="100108" level="8">
+    <if_sid>86601</if_sid>
+    <field name="alert.signature_id">^9900102$</field>
+    <description>SOC lab: Sensor observed traffic to a restricted UDP port</description>
+    <group>suricata,soc_network,soc_policy,</group>
+  </rule>
+
+  <rule id="100109" level="9">
+    <!-- The stock Python audit rule takes precedence for writes by the exercise process. -->
+    <if_sid>80700,92600</if_sid>
+    <field name="audit.type" type="pcre2">^SYSCALL$</field>
+    <field name="audit.key" type="pcre2">^soc_policy_change$</field>
+    <field name="audit.success" type="pcre2">^yes$</field>
+    <field name="audit.file.name" type="pcre2">^/var/lib/soc-lab/policy/service\.conf$</field>
+    <description>SOC lab: An audit watch recorded a successful change to the service policy</description>
+    <group>audit,soc_integrity,soc_policy,</group>
+  </rule>
+
+  <rule id="100100" level="8">
+    <decoded_as>json</decoded_as>
+    <field name="app.service">^soc-inventory$</field>
+    <field name="app.action">^export$</field>
+    <field name="app.actor_type">^service$</field>
+    <field name="app.decision">^deny$</field>
+    <description>SOC lab: Inventory export denied for a service identity</description>
+    <group>soc_application,soc_policy,</group>
+  </rule>
+</group>
