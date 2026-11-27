@@ -1,6 +1,12 @@
 # Enterprise SOC & Detection Engineering Lab
 
-A single-host SOC lab for tracing Linux and network telemetry from collection to an indexed Wazuh alert, then using the evidence in an incident investigation. It runs on Fedora with rootless Podman and KVM.
+**A single-host SOC lab that turns Linux and network telemetry into Wazuh alerts and uses that evidence in simulated incident investigations.**
+
+[Verified results](#verified-results) · [Architecture](#architecture) · [Reproduce locally](#reproduce-locally) · [Investigations](#investigations)
+
+[![Wazuh Operations dashboard showing ten verified scenarios, alert severity, and investigation summaries](docs/evidence/screenshots/operations-9007ca4b.png)](docs/evidence/screenshots/operations-9007ca4b.png)
+
+*Wazuh Operations dashboard from run `9007ca4b`, showing alert evidence, detection coverage, and the three simulated investigations.*
 
 ## Verified results
 
@@ -16,6 +22,8 @@ Seven scenarios generated live telemetry on the Debian guest. Three used labeled
 [Accepted run](docs/evidence/run-9007ca4b.json) · [Native replay](docs/evidence/logtest-9007ca4b.json) · [Baseline run](docs/evidence/run-0cee9232.json) · [Detection coverage matrix](docs/detection-coverage.md)
 
 ## Architecture
+
+The lab runs on Fedora with rootless Podman and KVM.
 
 | Component | Role |
 | --- | --- |
@@ -53,11 +61,7 @@ python3 -B scripts/run_scenarios.py
 
 The runner saves indexed alert references and control receipt evidence under the ignored `local-results/` directory. Keep raw archives, credentials, keys and guest disks private.
 
-## Dashboard and investigations
-
-The Operations dashboard shows the accepted run's volume, alert severity, file integrity, authentication and Suricata results alongside the coverage and case summaries.
-
-![Operations dashboard showing ten verified scenarios, alert severity, authentication, file integrity and Suricata results](docs/evidence/screenshots/operations-9007ca4b.png)
+## Investigations
 
 The live Agents page showed `soc-linux` active on Debian 12. The screenshot masks the agent IP address. [Agents capture](docs/evidence/screenshots/agents-9007ca4b.png)
 
